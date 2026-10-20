@@ -6,6 +6,7 @@ A [Claude](https://claude.com) skill for Amiga software development. It turns Cl
 
 - **Up-to-date API reference**: keeps a local sparse clone of [sacredbanana/AmigaSDK-gcc](https://github.com/sacredbanana/AmigaSDK-gcc) (autodocs and SDK/NDK headers for OS3, OS4 and MorphOS, no binaries) and searches it directly for function signatures, structs, constants and examples. GitHub links accompany every file it cites.
 - **Classic books**: recommends the best manual from the [retro-commodore.eu](https://www.retro-commodore.eu/amiga-development/) catalog (ROM Kernel Reference Manuals, Hardware Reference Manual, Intuition Reference Manual, Abacus titles, ARexx...) with direct download links.
+- **Real-time 3D graphics**: points to Andrew Tyler's [Amiga Real-Time 3D Graphics](https://amigasourcecodepreservation.gitlab.io/amiga-real-time-3d-graphics) (full book and 68000 sources, CC BY-SA 4.0), Michael Watson's [Frontier: Elite II renderer write-up](http://watsonmw.com/fintro/) and its C source [fe2-intro](https://github.com/watsonmw/fe2-intro) for 3D engines, fixed-point maths, depth sorting and palette tricks.
 - **Building and cross-compiling**: verified toolchain settings, Docker images (`sacredbanana/amiga-compiler:m68k-amigaos`, `ppc-amigaos`, `ppc-morphos`), Makefile patterns, native Bebbo GCC setup, and known gotchas such as `-fbaserel` with MUI/BOOPSI and the libnix `errno` link error.
 
 Claude picks the skill up automatically for Amiga library/API questions, requests for book recommendations or download links, and questions about compiling, Makefiles or linker errors for Amiga targets.
@@ -31,7 +32,7 @@ Zip the repository folder and upload it under **Settings → Capabilities → Sk
 ## Requirements
 
 - `git` and `bash` for the SDK cache (without them the skill falls back to browsing GitHub file by file)
-- Network access to GitHub and retro-commodore.eu
+- Network access to GitHub, GitLab, retro-commodore.eu and watsonmw.com
 - Docker, optionally, for building Amiga projects with the toolchain images
 
 ## Repository layout

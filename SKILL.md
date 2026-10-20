@@ -1,6 +1,6 @@
 ---
 name: "amiga-guru"
-description: Amiga Guru skill — Use when answering Amiga dev questions that need classic books from the retro-commodore.eu catalog or latest OS3/OS4/MorphOS autodocs and libraries from the sacredbanana/AmigaSDK-gcc GitHub repo, AND when setting up, writing a Makefile for, cross-compiling or building any Amiga or Amiga-like project (AmigaOS 3 m68k, AmigaOS 4 PPC, MorphOS PPC, AROS x86/ARM/etc.) with the Docker toolchain images or a native Bebbo GCC install. Triggers on library APIs, book recommendations, needing download links, code examples, compiler/toolchain setup, linker errors, or "how do I build this for Amiga".
+description: Amiga Guru skill — Use when answering Amiga dev questions that need classic books from the retro-commodore.eu catalog or latest OS3/OS4/MorphOS autodocs and libraries from the sacredbanana/AmigaSDK-gcc GitHub repo, AND when setting up, writing a Makefile for, cross-compiling or building any Amiga or Amiga-like project (AmigaOS 3 m68k, AmigaOS 4 PPC, MorphOS PPC, AROS x86/ARM/etc.) with the Docker toolchain images or a native Bebbo GCC install, AND for real-time 3D graphics on the Amiga (Andrew Tyler's Amiga Real-Time 3D Graphics book and the reverse-engineered Frontier: Elite II renderer write-up and fe2-intro source). Triggers on 3D/vector engines, fixed-point maths, depth sorting, library APIs, book recommendations, needing download links, code examples, compiler/toolchain setup, linker errors, or "how do I build this for Amiga".
 ---
 
 # Amiga Guru
@@ -210,6 +210,29 @@ When asked for a target not covered here: (1) identify the CPU architecture and 
 - For almost every technical question, recommend the single best book from the catalog (with direct download link) and any relevant high-quality external preserved docs (e.g. the Aminet RKRM volumes).
 - Strongly advise the user to download the recommended PDFs and upload them to their Amiga Guru Project so they become persistently available.
 - Never output large verbatim excerpts from the scanned books.
+
+---
+
+## Real-Time 3D Graphics and Game Engine References
+
+Use these for questions about 3D rendering, vector/polygon graphics, fixed-point maths, depth sorting, flat-shaded lighting, palette tricks or how classic Amiga games drew their scenes. Pair them with the Hardware Reference Manual for chip-level detail.
+
+- **Amiga Real-Time 3D Graphics** (Andrew Tyler, 1992), preserved by Amiga Source Code Preservation under CC BY-SA 4.0: https://amigasourcecodepreservation.gitlab.io/amiga-real-time-3d-graphics
+  - The full book is readable online at that URL; the 68000 assembly example programs (Devpac syntax, e.g. `polydraw.s`, `core_00.s`, `systm_00.s`) are in https://gitlab.com/amigasourcecodepreservation/amiga-real-time-3d-graphics
+  - Covers the 3D pipeline from first principles on bare hardware: frames of reference, vectors and matrices, bitplanes/Copper/Blitter drawing, Bresenham lines, Sutherland-Hodgman clipping, perspective and homogeneous coordinates, rotations, hidden surface removal, illumination, Euler angles, depth sorting and a flyable world scene. Appendices cover the 68000 instruction set, Devpac, chip registers and transform maths.
+  - Best match for "how do I write a 3D engine / filled vector routine in 68k assembly on the Amiga".
+- **Frontier: Elite II intro renderer write-up** (Michael Watson): http://watsonmw.com/fintro/
+  - Reverse-engineering deep dive into David Braben's 1993 engine running on a 7 MHz 68000 at 320×200 in 16 colours: models as bytecode run by a small VM each frame (LOD, animation, variation), depth-sorted binary-tree raster lists and the painter's-algorithm failure cases, star-directional lighting via colour bit flags, fixed-point 3×3 rotation matrices, trig/perspective lookup tables, software floating point for planets, recursive palette fitting into 14 hardware entries, Bézier-based planets/rings/craters, Blitter used only for clearing, the custom music/tracker format and the reverse-engineering tooling (DOSBox debugger, IDA, Dear ImGui).
+  - Best match for "how did commercial Amiga games fit a 3D engine into a 68000" and for optimisation ideas.
+- **fe2-intro** source (Michael Watson): https://github.com/watsonmw/fe2-intro
+  - C reimplementation of the Frontier intro: renderer/rasteriser (`src/render.[ch]`), Amiga-style audio playback (`src/audio.[ch]`), 3D model bytecode compiler/decompiler and vector fonts (`src/modelcode.[ch]`), fixed-point and soft-float maths (`src/fmath.h`) and direct Amiga hardware register helpers (`src/amigahw.h`).
+  - Builds for the Amiga with Bebbo GCC (`scripts/build-amiga-gcc.sh`, needs RTG and a fast 68060/Vampire/UAE), plus SDL, a Dear ImGui debug target and WASM via CMake. A useful real-world example of a modern C codebase cross-compiled to the Amiga alongside the patterns in the build section above.
+  - Needs the original game executable (or shareware version) at runtime for models and music.
+
+Matching rules:
+- Learning 3D theory or writing it in assembly → Tyler's book first, linking the specific chapter topic.
+- Engine architecture, optimisation tricks, palette management or model formats → the fintro write-up, then the matching file in fe2-intro.
+- Porting or cross-compiling a C graphics engine to the Amiga → fe2-intro's `main-amiga.c`, `amigahw.h` and Amiga build script, combined with the toolchain guidance above.
 
 ---
 
