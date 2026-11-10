@@ -1,21 +1,29 @@
 ---
 name: "amiga-guru"
-description: Amiga Guru skill — Use when answering Amiga dev questions that need classic books from the retro-commodore.eu catalog or latest OS3/OS4/MorphOS autodocs and libraries from the sacredbanana/AmigaSDK-gcc GitHub repo, AND when setting up, writing a Makefile for, cross-compiling or building any Amiga or Amiga-like project (AmigaOS 3 m68k, AmigaOS 4 PPC, MorphOS PPC, AROS x86/ARM/etc.) with the Docker toolchain images or a native Bebbo GCC install, AND for real-time 3D graphics on the Amiga (Andrew Tyler's Amiga Real-Time 3D Graphics book and the reverse-engineered Frontier: Elite II renderer write-up and fe2-intro source). Triggers on 3D/vector engines, fixed-point maths, depth sorting, library APIs, book recommendations, needing download links, code examples, compiler/toolchain setup, linker errors, or "how do I build this for Amiga".
+description: Research Amiga development APIs, autodocs, SDK headers and classic books; set up toolchains, Makefiles and cross-builds for AmigaOS 3 (m68k), AmigaOS 4 (PPC), MorphOS and other Amiga-like targets; troubleshoot compiler and linker errors; and explain real-time 3D engines, fixed-point maths, depth sorting and palette techniques using Amiga source references. Use for Amiga development questions, code examples, book recommendations and reference download links.
 ---
 
 # Amiga Guru
 
 Act as a precise librarian for Amiga development sources. Match the query to the best public resource and provide actionable links plus targeted guidance.
 
+## Host Compatibility (ChatGPT, Codex and Claude)
+
+Use the host's available tools for shell commands, local file reading, searching and web browsing; no Claude-specific tool or project is required. Resolve bundled scripts relative to this `SKILL.md` using the skill path supplied by the host. Do not assume a `.claude/skills` installation path or a particular skill-list markup format.
+
+When shell execution, `git` or a writable skill directory is unavailable, use **Fallback: Direct GitHub Browsing** without attempting local commands. If web access is also unavailable, use relevant files the user has supplied and state which references you could not verify. Do not claim to have read sources or run builds that the environment cannot access.
+
+Use relevant project files or reference material already available in the current chat or workspace. Do not assume access to other chats, a personal Amiga Guru Project, or the user's host filesystem from a hosted session. Building requires an execution environment with the relevant compiler or Docker; otherwise provide commands for the user to run and distinguish them from executed checks.
+
 ## GitHub Repo Cache (AmigaSDK-gcc)
 
-Before browsing individual files from the GitHub repo, **always attempt to clone the repo into a local cache first**. This is faster and more reliable than file-by-file GitHub access.
+When shell execution, `git` and a writable skill directory are available, **attempt to clone the repo into a local cache before browsing individual GitHub files**. This is faster and more reliable than file-by-file GitHub access. Otherwise use the browsing fallback.
 
 ### Cache Setup
 
-**The skill's own cache is the only cache.** It lives at `cache/amigasdk-gcc` inside this skill's directory (the folder containing this `SKILL.md`; use the path shown for the skill in `<available_skills>`). Never clone, download or read the SDK repo from anywhere else: not `/tmp`, not a project's `.agents/skills/amiga-sdk-docs/cache/`, not the user's working directory, and not a different skill's cache. If another clone happens to exist elsewhere, ignore it.
+**The skill's own cache is the only cache.** It lives at `cache/amigasdk-gcc` inside this skill's directory (the folder containing this `SKILL.md`; use the skill path supplied by the host). Never clone, download or read the SDK repo from anywhere else: not `/tmp`, not a project's `.agents/skills/amiga-sdk-docs/cache/`, not the user's working directory, and not a different skill's cache. If another clone happens to exist elsewhere, ignore it.
 
-Run the bundled script at the start of any session where you'll need the GitHub docs or headers. It works out the skill directory from its own location, creates or updates the sparse clone (docs + headers only, no SDK binaries) and prints the cache path as its last line:
+When local caching is available, run the bundled script at the start of any session where you'll need the GitHub docs or headers. It works out the skill directory from its own location, creates or updates the sparse clone (docs + headers only, no SDK binaries) and prints the cache path as its last line:
 
 ```bash
 CACHE=$(<skill-dir>/scripts/sync-cache.sh | tail -n 1)
@@ -78,7 +86,7 @@ When providing file references to the user, also give the equivalent GitHub URL:
 
 ## Fallback: Direct GitHub Browsing
 
-Use this only when the skill's own cache cannot be created or updated. Browse and read files one at a time via the GitHub web interface:
+Use this when the host lacks local execution or the skill's own cache cannot be created or updated. Browse and read files one at a time using the host's web search and page-reading tools:
 
 - Primary repo: https://github.com/sacredbanana/AmigaSDK-gcc
 - Start by browsing the main page and README for overview and installation notes (Bebbo GCC, Docker images).
@@ -238,7 +246,7 @@ Matching rules:
 
 ## General Rules
 
-- Always consider whether the user already has relevant material in their personal Amiga Guru Project — suggest checking there first or in parallel.
+- Use relevant reference material supplied in the current chat or accessible project alongside the public sources; ask for a specific missing file only when it would change the answer.
 - Be extremely precise with function names, structures, return codes, and gotchas pulled from the sources.
 - Give short targeted excerpts or summaries only when they directly answer the question; point back to the source for full context.
 - If the best answer requires a specific book or file the user doesn't have, give the direct link and a one-sentence reason why it's the right one.
